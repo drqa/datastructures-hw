@@ -27,8 +27,6 @@ int main(){
     int warriorStrength;
     string warriorName1, warriorName2;
     
-
-    //https://stackoverflow.com/questions/32898558/c-read-in-input-one-word-at-a-time
     while(file >> current){
 
         if(current == "Warrior"){
