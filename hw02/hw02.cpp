@@ -5,18 +5,24 @@
 
 using namespace std;
 
+// G: Document wide nitpicks: always include a space after the comment symbol // and before an opening brace { e.g.
+// This is a good comment
+// thisIsAGood(function prototype) {};
+
+// G: This comment is useless
 //Warrior struct with a name and strength
 struct Warrior {
     string name;
     int strength;
 };
 
+// G: This comment is useless
 //function prototypes
 void createWarrior(string name, int strength, vector<Warrior>& warriors);
 void doBattle(Warrior& warrior1, Warrior& warrior2);
 Warrior& searchWarriors(string name, vector<Warrior>& warriors);
 void status(vector<Warrior>& warriors);
- 
+// G: Three newlines between your prototypes and main is excessive
 
 
 int main(){
@@ -25,8 +31,11 @@ int main(){
     ifstream file("warriors.txt");
 
     string current;
+    // G: You could substitute "name" and "strength" as the l-values due to the context being understood as warrior
     string warriorName;
     int warriorStrength;
+    // G: I never want you to number things like this if you can help it - I would much prefer attacker/defender, challenger/target, or, at least, lhs/rhs
+    //    Try to consider the roles these warriors are playing in the battle when naming them
     string warriorName1, warriorName2;
     
     while(file >> current){
@@ -44,6 +53,7 @@ int main(){
             Warrior& warrior2 = searchWarriors(warriorName2, warriors);
             doBattle(warrior1, warrior2);
         }
+        // G: It wasn't specified in the HW so this is perfect, but brownie points if this else had handled the case when the file command is unrecognized
         //Status is our last and only remaining command, thus if we reach this far we know the command is Status
         //display each Warriors current status
         else{
@@ -54,10 +64,15 @@ int main(){
 
 //Create an new Warrior and push it to the vector
 void createWarrior(string name, int strength, vector<Warrior>& warriors){
+    // G: You can combine these lines into: warriors.push_back(Warrior{name, strength});
     Warrior warrior{name, strength};
     warriors.push_back(warrior);
 }
 
+// G: I stated this above but I would like to reiterate - warrior1/warrior2 are awful names and if you pick names like this in the future, be prepared
+//    to explain why it was absolutely necessary
+
+// G: Nitpick: Don't include a newline between your function signature and the first line of the body
 void doBattle(Warrior& warrior1, Warrior& warrior2){
     
     cout << warrior1.name << " battles " << warrior2.name << endl;
@@ -66,7 +81,9 @@ void doBattle(Warrior& warrior1, Warrior& warrior2){
     if(warrior1.strength == 0 && warrior2.strength == 0){
         cout << "Oh, NO! They're both dead! Yuck!" << endl;
     }
-    else if(warrior1.strength == 0){
+    // G: This line is not stated behavior within the HW. It is vague so I can understand why you made this assumption but given the wording of the 
+    //    assignment, the special "He's dead, ..." message should only be sent when the defender of the battle is dead, not the attacker.
+    else if(warrior1.strength == 0){ 
         cout << "He's dead, " << warrior2.name << endl;
     }
     else if(warrior2.strength == 0){
@@ -91,16 +108,22 @@ void doBattle(Warrior& warrior1, Warrior& warrior2){
     }
 }
 
+// G: name here should be passed by const reference
 Warrior& searchWarriors(string name, vector<Warrior>& warriors){
+    // G: We'll talk about this in class
     //This is my great shame
     //I have to return a reference to a Warrior struct, but I've no clue how to do that if no match is found
     //I look forward to learning why this is dumb and how to do it better
     Warrior nobody{"", 0};
-
+    
+    // G: For your iterator's l-value, I'd prefer either the singular of the mulitple (i.e. warrior) or the first letter of 
+    //    that word (i.e. w)
     //search the vector of Warriors for a Warrior with a given name
     //once found return a reference to that Warrior
     for(Warrior& i : warriors){
+        // G: These lines could also be: if(i.name == name) return i;
         if(i.name == name){
+            // G: The parentheses here are Pythonic, I prefer: return i;
             return(i);
         }
     }
@@ -110,6 +133,7 @@ Warrior& searchWarriors(string name, vector<Warrior>& warriors){
     return(nobodyRef);
 }
 
+// G: This vector should be passed by const reference
 //Iterate through the vector and display the names and strengths of each warrior within it
 void status(vector<Warrior>& warriors){
     cout << "There are: " << warriors.size() << " warriors" << endl;
@@ -117,3 +141,8 @@ void status(vector<Warrior>& warriors){
         cout << warriors[i].name << ", strength: " << warriors[i].strength << endl;
     }
 }
+
+/* G: Overall, great work, Dan. Outside of expected issues with style and the various pass-by's, you've quickly picked up the language
+      and these assignments seem easy for you. I'm looking forward to seeing you tackle the harder assignments. If I were to assign a 
+      grade, this would be an A.
+*/
